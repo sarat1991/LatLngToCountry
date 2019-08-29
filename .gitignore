@@ -8,5 +8,5 @@ target
 /RUNNING_PID
 /bin/
 .DS_Store
-test/.DS_Store
+GeoLocation/.DS_Store
 project/.DS_Store

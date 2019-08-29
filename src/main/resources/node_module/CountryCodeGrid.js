@@ -2,18 +2,12 @@
 // Query country code information from geographical coordinates
 //
 
-// Boilerplate from https://github.com/umdjs/umd/blob/master/returnExports.js
-
-// ----------------
-
 // Configuration. Should match generator settings
 var gridPath = './/src//main//resources//node_module//tiles//',
     worldFile = 'worldgrid.json',
     cellzoom = 5,
     zList = [9, 13];
-//var fs = require('fs');
 var console = {log: print, warn: print, error: print, info: print()}
-//module.exports = factory(null,require('fs'));
 // Cache of json file across zoom levels
 var jsonCache = {};
 
@@ -192,7 +186,7 @@ Zoomgrids = function (zlist) {
 
     var tilePath = gridPath + cellx.toString() + '/' + celly.toString()
         + '.json';
-    loadjson(tilePath, function (error, json) {
+    loadJson(tilePath, function (error, json) {
       if (error) {
         callback('Grid data loading error.');
         return console.warn('Error loading grid tile data: ' + error);
@@ -285,7 +279,7 @@ CodeGrid = function (path, wgrid) {
 
   function initWorldGrid() {
     var worldPath = gridPath + worldFile;
-    loadjson (worldPath, function (error, json) {
+    loadJson (worldPath, function (error, json) {
       if (error)
         return console.warn('Error loading geocoding data: ' + error);
       loadWorldJSON (json);
@@ -296,15 +290,6 @@ CodeGrid = function (path, wgrid) {
       }
       return null;
     });
-
-    /*loadWorldJSON(JSON.parse(jsonFile));
-    // Clear pending calls to getCode
-    var param;
-    while (param = pendingcb.shift()) {
-      codegrid.getCode(param[0], param[1], param[2]);
-    }
-    return null;*/
-
   }
 
   function loadWorldJSON(json) {
@@ -356,42 +341,12 @@ CodeGrid = function (path, wgrid) {
     return response;
   };
 
-  /*codegrid.getCode = function (lat, lng, callback) {
-    console.log("Entered getCode in codegrid")
-    var response = null;
-    if (!initialized) {
-      if (initializing) {
-        // Callback after initialization
-        pendingcb.push([lat, lng, callback]);
-        return;
-      }
-      console.warn('Error : grid not initialized.');
-      callback('Error: grid not initialized.');
-      return;
-    }
-    worldGrid.getCode(lat, lng, function (error, result) {
-      if (!error) {
-        if (result === '*') {
-          // Search in zoomGrids
-          response = zoomGrids.getCode(lat, lng, callback);
-        } else {
-          response = callback(error, result);
-
-        }
-      } else {
-        response = callback(error, result);
-      }
-      return;
-    });
-    return response;
-  };*/
   return codegrid;
 };
 
 // Utility functions
 // http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
 function long2tile(lon, zoom) {
-  // http://javascript.about.com/od/problemsolving/a/modulobug.htm
   return (Math.floor(
       (((((lon + 180) / 360) % 1) + 1) % 1) * Math.pow(2, zoom)));
 }
@@ -407,7 +362,7 @@ function lat2tile(lat, zoom) {
       1 / Math.cos(lat * Math.PI / 180)) / Math.PI) / 2 * Math.pow(2, zoom)));
 }
 
-function loadjson(path, callback) {
+function loadJson(path, callback) {
   console.log("Entered loadjson");
   var FileReader = Java.type("java.io.FileReader");
   var JSONParser = Java.type("org.json.simple.parser.JSONParser");
@@ -421,6 +376,5 @@ function loadjson(path, callback) {
   }catch (e) {
     console.log(e);
   }
-
 }
 
